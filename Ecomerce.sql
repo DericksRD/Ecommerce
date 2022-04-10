@@ -34,6 +34,9 @@ CREATE TABLE [Empleado] (
       REFERENCES [Empleado]([id_Empleado])
 );
 
+CREATE NONCLUSTERED INDEX index_supervisor
+ON Empleado (Id_Supervirsor);
+
 CREATE TABLE [Tipo_Pago] (
   [id_Tipo] INT,
   [Nombre] VARCHAR(25),
@@ -63,6 +66,15 @@ CREATE TABLE [Factura] (
       REFERENCES [Tipo_Pago]([id_Tipo])
 );
 
+CREATE NONCLUSTERED INDEX index_comprador
+ON Factura (id_Comprador);
+
+CREATE NONCLUSTERED INDEX index_empleado
+ON Factura (id_Empleado);
+
+CREATE NONCLUSTERED INDEX index_tipo
+ON Factura (id_Tipo);
+
 CREATE TABLE [Categoria_Producto] (
   [ID_CATEGORIA] INT,
   [nombre] VARCHAR(25),
@@ -82,6 +94,9 @@ CREATE TABLE [Producto] (
       REFERENCES [Categoria_Producto]([ID_CATEGORIA])
 );
 
+CREATE NONCLUSTERED INDEX index_categoria
+ON Producto (id_Categoria);
+
 CREATE TABLE [Factura_Detalle] (
   [id_detalle] INT,
   [id_factura] INT,
@@ -96,6 +111,12 @@ CREATE TABLE [Factura_Detalle] (
     FOREIGN KEY ([id_producto])
       REFERENCES [Producto]([id_Producto])
 );
+
+CREATE NONCLUSTERED INDEX index_factura
+ON Factura_Detalle (id_factura);
+
+CREATE NONCLUSTERED INDEX index_producto
+ON Factura_Detalle (id_producto);
 
 CREATE TABLE [Errores] (
   [id_error] INT,
