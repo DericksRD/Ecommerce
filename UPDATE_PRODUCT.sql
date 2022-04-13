@@ -12,9 +12,3 @@ AS
 	WHERE id_Producto = @id
 	
 GO
-
-DECLARE @cantidad INT
-SET @cantidad = (SELECT Cantidad FROM dbo.Productos WHERE id_Producto = 1) - 1
-EXECUTE UPDATE_PRODUCT 1, 'Tenis', 500, @cantidad
-
-SELECT * FROM dbo.Productos;

@@ -26,8 +26,8 @@ CREATE TABLE [Empleado] (
   [cedula] VARCHAR(25),
   [Sexo] BINARY,
   [Rol] BINARY,
-  [Id_Supervirsor] INT,
-  [Ventas] INT,
+  [Id_Supervirsor] INT DEFAULT 0,
+  [Ventas] INT DEFAULT 0,
   PRIMARY KEY ([id_Empleado]),
   CONSTRAINT [FK_Empleado.Id_Supervirsor]
     FOREIGN KEY ([Id_Supervirsor])

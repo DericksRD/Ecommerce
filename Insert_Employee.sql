@@ -7,10 +7,18 @@ CREATE OR ALTER PROCEDURE Insert_Employee
 	@id_supervisor INT,
 	@ventas INT --la suma de las ventas de los empleados.
 AS
+BEGIN
 	INSERT INTO dbo.Empleado
 		(Nombre, edad, cedula, Sexo, Rol, Id_Supervirsor, Ventas)
 	VALUES
 		(@nombre, @edad, @cedula, @sexo, @rol, @id_supervisor, @ventas);
+		--TODO: Calcular ventas.
+
+	INSERT INTO dbo.Acciones
+		(mensaje, Fecha)
+	VALUES
+		('Empleado registrado.', GETDATE())
+END;
 go
 
 EXECUTE Insert_Employee 'Francia', 35, '00145761684', 1, 0, 1, 10;
