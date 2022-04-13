@@ -1,0 +1,5 @@
+CREATE OR ALTER PROCEDURE Insert_Order
+
+AS
+
+go
