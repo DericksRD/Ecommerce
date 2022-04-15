@@ -31,5 +31,18 @@ END
 go
 
 EXECUTE Insert_Customers 'Rafael', 20, 1, '40200761761', 'Club de Leones';
+EXECUTE Insert_Customers 'Erick', 20, 1, '40200761761', 'Alma Rosa I';
+EXECUTE Insert_Customers 'Pablo', 22, 1, '40200761654', 'Ensanche Ozama';
+EXECUTE Insert_Customers 'José', 19, 1, '00100761761', 'Los Corales';
+EXECUTE Insert_Customers 'Jillian', 21, 0, '40207831761', 'Puerto Rico';
+EXECUTE Insert_Customers 'Gladys', 20, 0, '40200761345', 'Kilómetro 9';
+EXECUTE Insert_Customers 'Jaime', 20, 1, '40200764689', 'Gazcue';
+EXECUTE Insert_Customers 'Rachel', 19, 0, '40200103251', 'El millón';
+EXECUTE Insert_Customers 'Derick', 20, 1, '40200761761', 'Jesús de Galindez';
+EXECUTE Insert_Customers 'Angel', 20, 1, '40207618761', 'Costa Rica';
+EXECUTE Insert_Customers 'Ivana', 20, 0, '40234811761', 'Los Proceres';
+EXECUTE Insert_Customers 'Marcos', 27, 1, '40200764633', 'Parque Italia';
+EXECUTE Insert_Customers 'Lissette', 19, 0, '00100761345', 'New York';
+EXECUTE Insert_Customers 'Luisanna', 19, 0, '40200743681', 'Club de Leones';
+
 SELECT * FROM dbo.Comprador;
-SELECT * FROM dbo.Acciones;

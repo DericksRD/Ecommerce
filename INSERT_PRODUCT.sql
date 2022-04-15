@@ -22,10 +22,24 @@ BEGIN
 	VALUES
 		(@categoriaId, @nombre, @precio, @cantidad);
 
+	DECLARE @cantidad_categoria INT = (SELECT cantidad FROM dbo.Categoria_Producto WHERE ID_CATEGORIA = @categoriaId);
+	UPDATE dbo.Categoria_Producto
+	SET
+		cantidad = @cantidad_categoria + @cantidad
+	WHERE ID_CATEGORIA = @categoriaId;
+
 END
 go
 
 EXECUTE INSERT_PRODUCT 1, 'Jordan', 500, 25;
+EXECUTE INSERT_PRODUCT 2, 'Tommy', 1100, 10;
+EXECUTE INSERT_PRODUCT 1, 'Crocs', 700, 50;
+EXECUTE INSERT_PRODUCT 4, 'Pantalones azules', 2000, 25;
+EXECUTE INSERT_PRODUCT 4, 'Jogger Negro', 1000, 37;
+EXECUTE INSERT_PRODUCT 7, 'Correa negra', 250, 25;
+EXECUTE INSERT_PRODUCT 7, 'Par de Aretes pequeños', 300, 50;
+EXECUTE INSERT_PRODUCT 5, 'Mini falda rosada', 850, 10;
+EXECUTE INSERT_PRODUCT 5, 'Falda larga negra', 900, 40;
 
 SELECT * FROM dbo.Productos;
 --DELETE FROM dbo.Producto;

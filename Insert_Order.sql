@@ -120,13 +120,20 @@ BEGIN
 			VALUES
 				('Factura ingresada desde Procedure "Insert_Order"', GETDATE());
 
-			--Insertar ventas en Vendendor
+			--Insertar ventas en Empleado
 			DECLARE @ventas INT = (SELECT ventas FROM dbo.Empleado WHERE id_Empleado = @id_empleado);
 			UPDATE dbo.Empleado
 			SET
 				Ventas = @ventas + 1
 			WHERE id_Empleado = @id_empleado;
+
 			--Actualizar Superior
+			DECLARE @id_supervisor INT = (SELECT Id_Supervirsor FROM dbo.Empleado WHERE id_Empleado = @id_empleado);
+			SET @ventas = (SELECT ventas FROM dbo.Empleado WHERE id_Empleado = @id_supervisor);
+			UPDATE dbo.Empleado
+			SET
+				Ventas = @ventas + 1
+			WHERE id_Empleado = @id_supervisor;
 
 			--Insertar Factura detalle
 			DECLARE @id_factura INT = (SELECT id_factura From dbo.Factura
@@ -146,6 +153,12 @@ BEGIN
 			VALUES
 				('Detalle de Factura ingresado desde Procedure "Insert_Order"', GETDATE());
 
+			--Descontar la cantidad
+			UPDATE dbo.Productos
+			SET
+				Cantidad = @cantidad - @cantidad_producto
+			WHERE id_Producto = @id_producto;
+
 			COMMIT;
 		END TRY
 		BEGIN CATCH
@@ -157,5 +170,69 @@ BEGIN
 
 			ROLLBACK;
 		END CATCH
+END
+go
+
+--Debe insertar al menos 100 ventas por cada vendedor y 10 por cada cliente.
+DECLARE @i INT = 0;
+
+WHILE @i < 500
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
+			DECLARE @id_comprador INT = (FLOOR(RAND()*(14-1+1)+1)); --Num >= 1 and num <= 14
+
+			DECLARE @id_empleado INT;
+
+			DECLARE @finish BIT = 0;
+			WHILE @finish = 0
+			BEGIN
+				SET @id_empleado = (FLOOR(RAND()*(9-1+1)+1));
+
+				IF (SELECT Id_Supervirsor FROM dbo.Empleado WHERE id_Empleado = @id_empleado) IS NOT NULL
+				BEGIN
+					SET @finish = 1;
+				END
+			END
+
+			DECLARE @id_producto INT = (FLOOR(RAND()*(9-1+1)+1));
+
+			DECLARE @precio DECIMAL = (SELECT Precio FROM dbo.Productos WHERE id_Producto = @id_producto);
+			DECLARE @cantidad_actual INT = (SELECT Cantidad FROM dbo.Productos WHERE id_Producto = @id_producto);
+			IF @cantidad_actual = 0
+			BEGIN
+				SET @cantidad_actual = 500;
+			END
+			DECLARE @cantidad INT = (FLOOR(RAND()*(5-1+1)+1));
+
+			DECLARE @subtotal DECIMAL = @precio * @cantidad;
+
+			DECLARE @id_tipo INT;
+
+			SET @finish = 0;
+			WHILE @finish = 0
+			BEGIN
+				SET @finish = 1;
+
+				SET @id_tipo = (FLOOR(RAND()*(3-1+1)+1));
+				IF @id_tipo = 3
+				BEGIN
+					DECLARE @bonos INT = (SELECT bonos FROM dbo.Comprador WHERE Id_Comprador = @id_comprador);
+					IF @bonos < @subtotal
+					BEGIN
+						SET @finish = 0; --El ciclo continua.
+					END
+				END
+			END
+
+			EXECUTE Insert_Order @id_comprador, @id_empleado, @id_tipo, @subtotal, @subtotal, @id_producto, @cantidad;
+
+			SET @i = @i + 1;
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		PRINT 'Ha ocurrido un error ingresando los registros';
+	END CATCH
 END
 go
