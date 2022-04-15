@@ -31,3 +31,38 @@ AS
 	SELECT TOP 1 * FROM dbo.Comprador
 	WHERE Bonos = (SELECT MAX(bonos) FROM dbo.Comprador);
 go
+
+CREATE OR ALTER PROCEDURE Ranking
+AS
+
+	SELECT
+		p.id_Categoria,
+		COUNT(*) AS Ventas
+	FROM dbo.Factura_Detalle fd
+	INNER JOIN dbo.Productos p
+		ON fd.id_producto = p.id_Producto
+	GROUP BY p.id_Categoria
+	ORDER BY COUNT(*) DESC
+
+	SELECT
+		p.id_producto,
+		p.id_categoria,
+		COUNT(*) AS Ventas
+	FROM dbo.Factura_Detalle fd
+	INNER JOIN dbo.Productos p
+		ON fd.id_producto = p.id_Producto
+	GROUP BY p.id_Producto, p.id_Categoria
+	ORDER BY p.id_Categoria DESC, COUNT(*) DESC
+go
+
+CREATE OR ALTER PROCEDURE Invoice
+AS
+	SELECT
+		Nombre,
+		p.Cantidad,
+		COUNT(*) AS Ventas
+	FROM dbo.Productos p
+	INNER JOIN dbo.Factura_Detalle fd
+		ON p.id_Producto = fd.id_producto
+	GROUP BY Nombre, p.Cantidad
+go
